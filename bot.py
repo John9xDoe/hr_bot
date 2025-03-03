@@ -10,6 +10,7 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import BotCommandScopeChat
 
 #OPENAI_API_KEY = "your_openai_api_key"
 # def extract_skills_from_job(job_title):
@@ -63,9 +64,10 @@ async def set_default_commands(bot: Bot, user_id: int):
         BotCommand(command="refresh", description="Обновить данные"),
         BotCommand(command="help", description="Помощь")
     ]
-
-    commands = admin_commands if user_id not in YOUR_ADMIN_ID else user_commands
-    await bot.set_my_commands(commands, scope=None)
+    
+    commands = admin_commands if user_id in YOUR_ADMIN_ID else user_commands
+    await bot.set_my_commands(commands, scope=BotCommandScopeChat(chat_id=user_id))
+    
 def main_keyboard():
     return ReplyKeyboardMarkup(
         keyboard=[
